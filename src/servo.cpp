@@ -1,19 +1,17 @@
 #include <imu.h>
 
-int servopinx=2;    // dio port definition
-int servopiny=5;
+int servopinx=2;    // dio port definition for X axis
+int servopiny=5;    // dio port definition for Y axis
 int pulsewidth;     // pwm on time
 int repeat=1;       // number of pwm write cycle repetition
 int ax;             // angle for servo motors
 int ay;
 int az;
-float comp = 1.1;  // compensate not to show minus value
-float adj = 30;    // adjuct the angle with map() function not to exceed the range upper limit 180　& eliminate the noise
-float p_accX = 0.5;
-float p_accY = 0.5;
-float p_accZ = 0.5;
+float p_accX;       // to hold IMU read data
+float p_accZ;
+int p_angX;         // to hold servo motor angles
+int p_angZ;
 boolean first = true;   // check if it is first cycle or not.
-float smooth = 0.6;     // smoothing the angle value. it causes a delay time to the angle change.
 //
 void servo(int myangle, int motor)      // servo motor pwm contorol. motor 0 : servoponx , motor 1 : servopiny
 {
@@ -33,6 +31,14 @@ void servo(int myangle, int motor)      // servo motor pwm contorol. motor 0 : s
     delay(20-pulsewidth/1000);
  }
 }
+void init_sm()
+{
+    servo(90, 0);
+    servo(90, 1);
+    p_angX = 90;
+    p_angZ = 90;
+    delay(600);
+}
 void setup()
 {
  setup_imu();
@@ -42,23 +48,31 @@ void setup()
 void loop()
 {
  loop_imu();
- if (first == true){        // smoothing
-     p_accX = accX;
-     p_accY = accY;
-     p_accZ = accZ;
-     first = false;
+ if (first == true){
+    init_sm();                  // initialize to 90 degree
+    first = false;
     }
-    else{
-        p_accX = p_accX*smooth + accX*(1-smooth);       
-        p_accY = p_accY*smooth + accY*(1-smooth);
-        p_accZ = p_accZ*smooth + accZ*(1-smooth);
+ if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){  // the angle change is needed? & the change is reflected? & the angle limit
+     p_angX ++;
     }
- ax = map((int)((p_accX+comp)*adj), 0, 66, 0, 180);
- ay = map((int)((p_accY+comp)*adj), 0, 66, 0, 180);
- az = map((int)((p_accZ+comp)*adj), 0, 66, 0, 180);
+     else{
+         if (accX > 0.05 && abs(p_accX - accX) > 0.02 && p_angX > 0){
+             p_angX --;
+         }
+     }
+if (accZ < -0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ < 180){
+     p_angZ ++;
+    }
+     else{
+         if (accZ > 0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ > 0){
+             p_angZ --;
+         }
+     }
+ p_accX = accX;                 // set to the previous values
+ p_accZ = accZ;
+ servo(p_angZ , 0);             // drive the servo motor
+ servo(p_angX , 1);
+ delay(1);
  M5.Lcd.setCursor(0, 114);
- M5.Lcd.printf("%3d  %3d  %3d ", ax, ay, az);
- servo(ax , 0);
- servo(ay , 1);
- delay(5);
+ M5.Lcd.printf("%3d  %3d ", p_angX, p_angZ);
 }
