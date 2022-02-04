@@ -1,1 +1,1 @@
-# M5stack movement links to the servo motor angles.
+# M5stack keeps uplight position using two servo motors.
