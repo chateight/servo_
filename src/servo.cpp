@@ -52,7 +52,7 @@ void loop()
     init_sm();                  // initialize to 90 degree
     first = false;
     }
- if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){  // the angle change is needed? & the change is reflected? & the angle limit
+ if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){  // Is the angle change needed? & Is the change reflected? & Does the angle reach to the angle limit
      p_angX ++;
     }
      else{
