@@ -31,6 +31,7 @@ void servo(int myangle, int motor)      // servo motor pwm contorol. motor 0 : s
     delay(20-pulsewidth/1000);
  }
 }
+
 void init_sm()
 {
     servo(90, 0);
@@ -39,12 +40,14 @@ void init_sm()
     p_angZ = 90;
     delay(600);
 }
+
 void setup()
 {
  setup_imu();
  pinMode(servopinx,OUTPUT);
  pinMode(servopiny,OUTPUT);
 }
+
 void loop()
 {
  loop_imu();
