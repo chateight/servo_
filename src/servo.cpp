@@ -31,7 +31,6 @@ void servo(int myangle, int motor)      // servo motor pwm contorol. motor 0 : s
     delay(20-pulsewidth/1000);
  }
 }
-
 void init_sm()
 {
     servo(90, 0);
@@ -40,14 +39,12 @@ void init_sm()
     p_angZ = 90;
     delay(600);
 }
-
 void setup()
 {
  setup_imu();
  pinMode(servopinx,OUTPUT);
  pinMode(servopiny,OUTPUT);
 }
-
 void loop()
 {
  loop_imu();
@@ -55,19 +52,12 @@ void loop()
     init_sm();                  // initialize to 90 degree
     first = false;
     }
- if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){  // Is the angle change needed? & Is the change reflected? & Does the angle reach to the angle limit
-     p_angX ++;
-    }
-     else{
-         if (accX > 0.05 && abs(p_accX - accX) > 0.02 && p_angX > 0){
+// the angle change is needed? & the change is reflected? & check the angle limit
+ if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){ p_angX ++; } else{ if (accX > 0.05 && abs(p_accX - accX) > 0.02 && p_angX > 0){
              p_angX --;
          }
      }
-if (accZ < -0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ < 180){
-     p_angZ ++;
-    }
-     else{
-         if (accZ > 0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ > 0){
+ if (accZ < -0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ < 180){ p_angZ ++; } else{ if (accZ > 0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ > 0){
              p_angZ --;
          }
      }
