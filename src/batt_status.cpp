@@ -1,7 +1,5 @@
 #include <imu.h>
 
-static int giBattery = 0;
-static int giBatteryOld = 0xFF;
 
 void setup_batt()
 {  
