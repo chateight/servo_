@@ -1,9 +1,14 @@
 #include <imu.h>
 
+extern float accX;  // Define variables for storing inertial sensor data
+extern float accY;
+extern float accZ;
+
 int servopinx=2;    // dio port definition for X axis
 int servopiny=5;    // dio port definition for Y axis
-int pulsewidth;     // pwm on time
 int repeat=1;       // number of pwm write cycle repetition
+boolean first = true;   // check if it is first cycle or not.
+int pulsewidth;     // pwm on time
 int ax;             // angle for servo motors
 int ay;
 int az;
@@ -11,8 +16,8 @@ float p_accX;       // to hold IMU read data
 float p_accZ;
 int p_angX;         // to hold servo motor angles
 int p_angZ;
-boolean first = true;   // check if it is first cycle or not.
-//
+
+
 void servo(int myangle, int motor)      // servo motor pwm contorol. motor 0 : servoponx , motor 1 : servopiny
 {
  for (int i = 0; i < repeat; i ++)      // i is used to keep a moving time, since this source does not use the library.
@@ -42,6 +47,7 @@ void init_sm()
 void setup()
 {
  setup_imu();
+ setup_batt();
  pinMode(servopinx,OUTPUT);
  pinMode(servopiny,OUTPUT);
 }
@@ -68,4 +74,9 @@ void loop()
  delay(1);
  M5.Lcd.setCursor(0, 114);
  M5.Lcd.printf("%3d  %3d ", p_angX, p_angZ);
+
+ // battery level indication
+ int bat_level = read_batt();
+ M5.Lcd.setCursor(0, 158);
+ M5.Lcd.printf("batt_level : %3d \%",bat_level);
 }
