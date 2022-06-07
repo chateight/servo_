@@ -7,7 +7,6 @@ extern float accZ;
 int servopinx=2;    // dio port definition for X axis
 int servopiny=5;    // dio port definition for Y axis
 int repeat=1;       // number of pwm write cycle repetition
-boolean first = true;   // check if it is first cycle or not.
 int pulsewidth;     // pwm on time
 int ax;             // angle for servo motors
 int ay;
@@ -36,7 +35,8 @@ void servo(int myangle, int motor)      // servo motor pwm contorol. motor 0 : s
     delay(20-pulsewidth/1000);
  }
 }
-void init_sm()
+
+void init_sm()      // initialize to 90 degree
 {
     servo(90, 0);
     servo(90, 1);
@@ -44,20 +44,19 @@ void init_sm()
     p_angZ = 90;
     delay(600);
 }
+
 void setup()
 {
+ init_sm();
  setup_imu();
  setup_batt();
  pinMode(servopinx,OUTPUT);
  pinMode(servopiny,OUTPUT);
 }
+
 void loop()
 {
  loop_imu();
- if (first == true){
-    init_sm();                  // initialize to 90 degree
-    first = false;
-    }
 // the angle change is needed? & the change is reflected? & check the angle limit
  if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){ p_angX ++; } else{ if (accX > 0.05 && abs(p_accX - accX) > 0.02 && p_angX > 0){
              p_angX --;
