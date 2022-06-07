@@ -78,5 +78,5 @@ void loop()
  // battery level indication
  int bat_level = read_batt();
  M5.Lcd.setCursor(0, 158);
- M5.Lcd.printf("batt_level : %3d \%",bat_level);
+ M5.Lcd.printf("batt_level : %3d %%",bat_level);
 }
