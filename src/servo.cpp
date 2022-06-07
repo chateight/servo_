@@ -47,24 +47,30 @@ void init_sm()      // initialize to 90 degree
 
 void setup()
 {
- init_sm();
  setup_imu();
  setup_batt();
  pinMode(servopinx,OUTPUT);
  pinMode(servopiny,OUTPUT);
+ init_sm();
 }
 
 void loop()
 {
  loop_imu();
 // the angle change is needed? & the change is reflected? & check the angle limit
- if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180){ p_angX ++; } else{ if (accX > 0.05 && abs(p_accX - accX) > 0.02 && p_angX > 0){
-             p_angX --;
-         }
+    if (accX < -0.05 && abs(p_accX - accX) > 0.02 && p_angX < 180)
+    { p_angX ++; } 
+    else
+    {
+        if (accX > 0.05 && abs(p_accX - accX) > 0.02 && p_angX > 0)
+        { p_angX --; }
      }
- if (accZ < -0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ < 180){ p_angZ ++; } else{ if (accZ > 0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ > 0){
-             p_angZ --;
-         }
+    if (accZ < -0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ < 180)
+    { p_angZ ++; } 
+    else
+    { 
+        if (accZ > 0.05 && abs(p_accZ - accZ) > 0.02 && p_angZ > 0)
+        { p_angZ --; }
      }
  p_accX = accX;                 // set to the previous values
  p_accZ = accZ;
